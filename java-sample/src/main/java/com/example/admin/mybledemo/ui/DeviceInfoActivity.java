@@ -59,13 +59,12 @@ public class DeviceInfoActivity extends AppCompatActivity implements View.OnClic
 
     private RadioGroup hzSelect_rg;
     private RadioButton hzSelect_rb1,hzSelect_rb2,hzSelect_rb3;
-    private Button setHz_btn;
 
     private TextView batteryNum_tv,batteryState_tv;
 
     private TextView deviceName_tv, firmwareVersion_tv, calculationVersion_tv;
 
-    private Button showService_tv,showLog_tv;
+    private Button showService_tv,showLog_tv,clearLog_tv;
 
     private TextView text_log;
 
@@ -112,18 +111,31 @@ public class DeviceInfoActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 Log.i("ttt", i + "----i---");  // i 值为 1 2 3
+                byte[] hzData = new byte[4];
 
                 switch (i) {
                     case R.id.hzSelect_rb1:
                         setHz=25;
+                        hzData=OrderPacket.setHz25;
+
                         break;
                     case R.id.hzSelect_rb2:
                         setHz=50;
+                        hzData=OrderPacket.setHz50;
+
                         break;
                     case R.id.hzSelect_rb3:
                         setHz=100;
+                        hzData=OrderPacket.setHz100;
+
                         break;
                 }
+                //if (canSetHz){
+                    if (currentHz!=setHz){   //需要设置
+                        searchDeviceInfo(hzData);
+                    }
+                //}
+
 
             }
         });
@@ -151,8 +163,9 @@ public class DeviceInfoActivity extends AppCompatActivity implements View.OnClic
 
         deviceAddress_tv=findViewById(R.id.deviceAddress_tv);
 
-        setHz_btn=findViewById(R.id.setHz_btn);
-        setHz_btn.setOnClickListener(this);
+
+        clearLog_tv=findViewById(R.id.clearLog_tv);
+        clearLog_tv.setOnClickListener(this);
 
 
     }
@@ -281,6 +294,8 @@ public class DeviceInfoActivity extends AppCompatActivity implements View.OnClic
                                                 hzSelect_rb3.setChecked(true);
                                             }
 
+                                            //canSetHz=true;
+
                                         }else if (resultBytes[5]==0x01){
                                             Utils.showToast("频率设失败，请稍后再试.");
 
@@ -291,6 +306,8 @@ public class DeviceInfoActivity extends AppCompatActivity implements View.OnClic
                                             }else if (currentHz==100){
                                                 hzSelect_rb3.setChecked(true);
                                             }
+
+                                            //canSetHz=false;
 
 
                                         }else if(resultBytes[5]==0x02) {
@@ -304,32 +321,40 @@ public class DeviceInfoActivity extends AppCompatActivity implements View.OnClic
                                     if(resultBytes[5]==0x00){
 
                                         if (resultBytes[4]==0x03){  // 电池电量同步
-                                            batteryNum_tv.setText("电量："+resultBytes[6]);
-                                            if (resultBytes[7]==0x00){
-                                                batteryState_tv.setText("充电状态：充电中");
-                                            }else {
-                                                batteryState_tv.setText("充电状态：未充电");
+
+                                            try{
+                                                Log.e("tttt",resultBytes.length+"---");
+                                                batteryNum_tv.setText("电量："+resultBytes[7]+"%");
+                                                if (resultBytes[8]==0x00){
+                                                    batteryState_tv.setText("充电状态：充电中");
+                                                }else {
+                                                    batteryState_tv.setText("充电状态：未充电");
+                                                }
+                                            }catch (Exception e){
+                                                Log.e("tttt",resultBytes.length+"---");
+
                                             }
+
                                         }else {
-                                            batteryNum_tv.setText("电量："+resultBytes[6]);
-                                            if (resultBytes[7]==0x00){
+                                            batteryNum_tv.setText("电量："+resultBytes[7]+"%");
+                                            if (resultBytes[8]==0x00){
                                                 batteryState_tv.setText("充电状态：充电中");
                                             }else {
                                                 batteryState_tv.setText("充电状态：未充电");
                                             }
-                                            Log.i("频率",resultBytes[8]+"---");
-                                            if (resultBytes[8]==25){
+                                            Log.i("频率",resultBytes[9]+"---");
+                                            if (resultBytes[9]==25){
                                                 hzSelect_rb1.setChecked(true);
-                                            }else if(resultBytes[8]==50){
+                                            }else if(resultBytes[9]==50){
                                                 hzSelect_rb2.setChecked(true);
-                                            }else if (resultBytes[8]==100){
+                                            }else if (resultBytes[9]==100){
                                                 hzSelect_rb3.setChecked(true);
                                             }
 
-                                            currentHz=resultBytes[8];
+                                            currentHz=resultBytes[9];
 
-                                            byte[] bytes=DataTypeTools.bytesSplit(resultBytes,9);
-                                            Log.i("频率",DataTypeTools.byte2Str(bytes)+"---字符串");
+                                            byte[] bytes=DataTypeTools.bytesSplit(resultBytes,10);
+                                            Log.i("固件版本",DataTypeTools.byte2Str(bytes)+"---字符串");
                                             String version=DataTypeTools.byte2Str(bytes);
                                             String []  tmp=version.split(",");
                                             if (tmp.length>1){
@@ -417,7 +442,9 @@ public class DeviceInfoActivity extends AppCompatActivity implements View.OnClic
     private boolean logIsShow=false;
 
     private int currentHz;
-    private int setHz;
+    private int setHz=0;
+
+    private boolean canSetHz=true;
 
 
     @Override
@@ -445,18 +472,9 @@ public class DeviceInfoActivity extends AppCompatActivity implements View.OnClic
                     logIsShow=true;
                 }
                 break;
-            case R.id.setHz_btn:
 
-                byte[] hzData = new byte[4];
-                if(setHz==25){
-                    hzData=OrderPacket.setHz25;
-                }else if (setHz==50){
-                    hzData=OrderPacket.setHz50;
-                }else if (setHz==100){
-                    hzData=OrderPacket.setHz100;
-                }
-
-                searchDeviceInfo(hzData);
+            case R.id.clearLog_tv:
+                text_log.setText("");
                 break;
         }
     }

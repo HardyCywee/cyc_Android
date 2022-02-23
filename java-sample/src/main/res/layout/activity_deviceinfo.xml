@@ -30,25 +30,29 @@
                     android:text="设备信息部分："
                     ></TextView>
 
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/deviceAddress_tv"
-                    ></TextView>
-
                 <LinearLayout
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center"
                     android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp">
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="mac地址"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/deviceAddress_tv"
+                        ></TextView>
 
-
-
+                    <TextView
+                        android:layout_marginLeft="15dp"
+                        android:id="@+id/batteryNum_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="电量："></TextView>
+                </LinearLayout>
 
 
                     <RadioGroup
+                        android:layout_marginTop="10dp"
                         android:id="@+id/hzSelect_rg"
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
@@ -78,15 +82,7 @@
 
                     </RadioGroup>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="设置频率"
-                        android:layout_marginLeft="10dp"
-                        android:id="@+id/setHz_btn"
-                        ></Button>
 
-                </LinearLayout>
 
 
                 <LinearLayout
@@ -98,12 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="设备型号："></TextView>
-                    <TextView
-                        android:layout_marginLeft="15dp"
-                        android:id="@+id/batteryNum_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="电量："></TextView>
+
 
                     <TextView
                         android:layout_marginLeft="15dp"
@@ -159,8 +150,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <Button
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/white"
+                    android:background="@color/colorPrimary"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:text="显示服务列表"
                     android:id="@+id/showService_tv"
                     android:layout_marginTop="10dp"
@@ -168,14 +163,31 @@
                     ></Button>
 
                 <Button
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/white"
+                    android:background="@color/colorPrimary"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:text="显示日志打印"
                     android:id="@+id/showLog_tv"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     ></Button>
-
+                <Button
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textColor="@color/white"
+                    android:background="@color/colorPrimary"
+                    android:text="清空日志打印"
+                    android:id="@+id/clearLog_tv"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    ></Button>
             </LinearLayout>
 
 
